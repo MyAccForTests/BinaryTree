@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Created by Ilua on 05.03.2017.
  */
@@ -12,15 +15,15 @@ public class BinaryTree<T extends Comparable<T>>{
         if(root==null) root=node;
         else
         {
-            boolean check=true;
             Node newNode=root;
-            while (check)
+            while (true)
             {
                 if(newNode.getValue().compareTo(element)<=0)
                 {
                     if(newNode.getRight()==null) {
                         newNode.setRight(node);
-                        check=false;
+                        System.out.println(element + " R");
+                        return;
                     }
                     else newNode=newNode.getRight();
                 }
@@ -28,7 +31,8 @@ public class BinaryTree<T extends Comparable<T>>{
                 {
                     if(newNode.getLeft()==null) {
                         newNode.setLeft(node);
-                        check=false;
+                        System.out.println(element + " L");
+                        return;
                     }
                     else newNode=newNode.getLeft();
                 }
@@ -147,6 +151,47 @@ public class BinaryTree<T extends Comparable<T>>{
 
         public void setLeft(Node<T> left) {
             this.left = left;
+        }
+    }
+
+    public ArrayList<T> walkBinaryTree()
+    {
+        ArrayList<T> list=new ArrayList<>();
+        traverse(root, list);
+        return list;
+    }
+
+    private void traverse(Node node, ArrayList<T> list)
+    {
+        list.add((T) node.getValue());
+        if(node.getLeft()!=null) traverse(node.getLeft(), list);
+        if(node.getRight()!=null) traverse(node.getRight(), list);
+    }
+
+    public java.util.Iterator<T> iterator()
+    {
+        return new BinaryTree<T>.Iterator(walkBinaryTree());
+    }
+
+    private class Iterator implements java.util.Iterator<T>
+    {
+        ArrayList<T> list=new ArrayList<>();
+        int counter=0;
+
+        private Iterator(ArrayList<T> list) {
+            this.list=list;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return counter<list.size();
+        }
+
+        @Override
+        public T next() {
+            T result=list.get(counter);
+            counter++;
+            return result;
         }
     }
 }
